@@ -107,6 +107,7 @@ const Work = ({ isDarkMode }) => {
   const [showAll, setShowAll] = useState(false); // For toggling show all projects
   const [selectedProject, setSelectedProject] = useState(null); // Track the selected project
   const showMoreRef = useRef(null); // Reference for show more button scroll
+  const [mounted, setMounted] = useState(false)
 
   // Handle project click to open the description card
   const handleProjectClick = (project) => {
@@ -130,7 +131,12 @@ const Work = ({ isDarkMode }) => {
    useEffect(() => {
     // Client-side only logic (e.g., initialize states)
     setShowAll(false);
+    setMounted(true);
   }, []);
+
+  if (!mounted) {
+    return null; // Prevent rendering until the component is mounted on the client
+  }
 
   // Determine the projects to display (either 4 or all)
   const displayedProjects = showAll ? workData : workData.slice(0, 4);
@@ -229,12 +235,14 @@ const Work = ({ isDarkMode }) => {
             &times;
           </div>
           <div
-            className={` p-6 rounded-lg shadow-lg max-w-4xl w-[80vw] mx-auto transition-all duration-500 ${
+            className={` p-6 rounded-lg shadow-lg  max-w-4xl w-[80vw] mx-auto transition-all duration-500 ${
               isDarkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-black "
             }`}
             style={{
               transition: "all 0.3s ease",
               border: isDarkMode ? "none" : "2px solid #ccc", // For light mode, add border
+              maxHeight: '90vh',  // Limit the height of the card
+              overflowY: 'auto',  // Enable vertical scrolling if the content exceeds the height
             }}
           >
             <div className="relative">
